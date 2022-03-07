@@ -218,9 +218,224 @@
             </pre>
         </section>
         <section>
-            <h2>轮播图</h2>
+            <h2>轮播图1</h2>
             <pre>
-                
+                //css部分
+                .pic-cont {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 320px;
+                    height: 180px;
+                    overflow: hidden;
+                }
+                .pic-cont img {
+                    display: block;
+                    width: 320px;
+                    height: 180px;
+                }
+                .img-cont {
+                    display: none;
+                }
+                .pic-cont .active {
+                    display: block;
+                    animation: show 1s 1;
+                }
+                @keyframes show {
+                    0% {
+                        opacity: 0;
+                    }
+                    100% {
+                        opacity: 1;
+                    }
+                }
+                //html部分
+                &lt;div class="pic-cont"&gt;&lt;/div&gt;
+                //js部分
+                let images = [
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/39bb34167f6c178d6bb768d8872c97f8.jpg",
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/918820682e4a490221cfd92b24c14b86.jpg",
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/222d6c61df75f30e6782ec476d5c8273.jpg",
+                ];
+                let rollImages = (cont, images) => {
+                    let imagesDom = [];
+                    for (let i = 0; i < images.length; i++) {
+                        imagesDom.push(
+                            `&lt;div class="img-cont ${
+                                i == 0 ? "active" : ""
+                            }"&gt;&lt;img src="${images[i]}"/&gt;&lt;/div&gt;`,
+                        );
+                    }
+                    document.querySelector(cont).innerHTML = imagesDom.join("");
+                    setInterval(() => {
+                        let active = document.querySelector(".active");
+                        if (active.nextSibling) {
+                            active.nextSibling.classList.add("active");
+                        } else {
+                            document
+                                .querySelector(".img-cont")
+                                .classList.add("active");
+                        }
+                        active.classList.remove("active");
+                    }, 3000);
+                };
+                rollImages(".pic-cont", images);
+            </pre>
+        </section>
+        <section>
+            <h2>轮播图2-jquery</h2>
+            <pre>
+                //css部分
+                .pic-cont {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 320px;
+                    height: 180px;
+                    overflow: hidden;
+                }
+                .pic-cont ul {
+                    width: 960px;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    display: flex;
+                    flex-direction: row;
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                }
+                .pic-cont img {
+                    display: block;
+                    width: 320px;
+                    height: 180px;
+                }
+                //html部分
+                &lt;div class="pic-cont"&gt;&lt;/div&gt;
+                //js部分
+                &lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+                let images = [
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/39bb34167f6c178d6bb768d8872c97f8.jpg",
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/918820682e4a490221cfd92b24c14b86.jpg",
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/222d6c61df75f30e6782ec476d5c8273.jpg",
+                ];
+
+                function rollImages(cont, images) {
+                    let imagesDom = [];
+                    imagesDom.push(`&lt;ul&gt;`);
+                    for (let i = 0; i < images.length; i++) {
+                        imagesDom.push(`&lt;li&gt;&lt;img class="" src="${images[i]}"/&gt;&lt;/li&gt;`);
+                    }
+                    imagesDom.push("&lt;/ul&gt;");
+                    cont.append(imagesDom.join(""));
+                    let ul = cont.find("ul");
+                    let moveImg = function () {
+                        ul.animate(
+                            {
+                                left: "-320px",
+                            },
+                            "slow",
+                            function () {
+                                ul.find("li:first").appendTo(ul);
+                                ul.css({ left: 0 });
+                            },
+                        );
+                    };
+                    setInterval(() => {
+                        moveImg();
+                    }, 2000);
+                }
+                rollImages($(".pic-cont"), images);
+            </pre>
+        </section>
+
+        <section>
+            <h2>轮播图3</h2>
+            <pre>
+                //css部分
+                .pic-cont {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 320px;
+                    height: 180px;
+                    overflow: hidden;
+                }
+                .pic-cont ul {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                }
+                .pic-cont li {
+                    position: absolute;
+                    left: 320px;
+                    top: 0;
+                }
+                .pic-cont .active {
+                    transform: translateX(-100%);
+                }
+                .pic-cont .ani {
+                    z-index: 1;
+                    animation: show 1s 1;
+                }
+                .pic-cont img {
+                    display: block;
+                    width: 320px;
+                    height: 180px;
+                }
+                @keyframes show {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+                //html部分
+                &lt;div class="pic-cont"&gt;&lt;/div&gt;
+                //js部分
+                let images = [
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/39bb34167f6c178d6bb768d8872c97f8.jpg",
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/918820682e4a490221cfd92b24c14b86.jpg",
+                    "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/222d6c61df75f30e6782ec476d5c8273.jpg",
+                ];
+                function rollImages(cont, images) {
+                    let imagesDom = [];
+                    imagesDom.push(`&lt;ul class="slid-cont"&gt;`);
+                    for (let i = 0; i < images.length; i++) {
+                        imagesDom.push(
+                            `&lt;li class="img-cont ${
+                                i == 0 ? "active" : ""
+                            }"&gt;&lt;img src="${images[i]}"/&gt;&lt;/li&gt;`,
+                        );
+                    }
+                    imagesDom.push("&lt;/ul&gt;");
+                    cont.innerHTML = imagesDom.join("");
+                    let ul = document.querySelector(".slid-cont");
+                    let active = "";
+                    let nextActive = "";
+                    let moveImg = () => {
+                        active = document.querySelector(".active");
+                        nextActive = active.nextSibling
+                            ? active.nextSibling
+                            : document.querySelector(".img-cont");
+                        nextActive.classList.add("ani");
+                    };
+                    ul.addEventListener("animationend", () => {
+                        active.classList.remove("active");
+                        active.classList.remove("ani");
+                        nextActive.classList.add("active");
+                        nextActive.classList.remove("ani");
+                    });
+                    setInterval(moveImg, 2000);
+                }
+                rollImages(document.querySelector(".pic-cont"), images);
             </pre>
         </section>
 
