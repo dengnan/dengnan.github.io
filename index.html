@@ -8,19 +8,223 @@
     <meta http-equiv="pragma" CONTENT="no-cache">
     <meta http-equiv="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
     <meta http-equiv="expires" CONTENT="0">
-    <title>js特效</title>
-    <link rel="stylesheet" type="text/css" href="./src/css/home.css">
+    <title>code snippets</title>
+    <style>
+        .main {
+            max-width: 1024px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+        }
+        h2{
+            background-color: #eee;
+        }
+        pre{
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-    <div id="homePage">
-        <div class="slide-content" id="adv1"></div>
-        <div class="slide-content" id="adv2"></div>
-        <div class="content">
-            <canvas id="myCanvas" width="300" height="100" ></canvas>
-        </div>
+    <div class="main">
+        <section>
+            <h2>URL获取某个参数</h2>
+            <pre>
+                //方法1
+                let getQueryParams = name => {
+                    let params = {};
+                    let arrParams = {};
+                    if (location.search) {
+                        arrParams = location.search.split("&");
+                    } else {
+                        return undefined;
+                    }
+                    for (let i = 0; i < arrParams.length; i++) {
+                        let kvArr =
+                            arrParams[i].indexOf("?") == -1
+                                ? arrParams[i].split("=")
+                                : arrParams[i].replace(/(\?)|(\/)/g, "").split("=");
+                        params[kvArr[0]] = kvArr[1];
+                    }
+                    return params[name];
+                }
+                //方法2
+                let getQueryStringByName = name => {
+                    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                        results = regex.exec(location.search);
+                    return results === null
+                        ? ""
+                        : decodeURIComponent(results[1].replace(/\+/g, " "));
+                }
+            </pre>
+        </section>
+        <section>
+            <h2>URL添加参数</h2>
+            <pre>
+                let addSearchParam = (url, key, value) => {
+                    let parts = url.split('#');
+                    parts[0] = parts[0] + ((parts[0].indexOf('?') !== -1) ? '&' : '?') + key + '=' + value;
+                    return parts.join('#');
+                }
+            </pre>
+        </section>
+        <section>
+            <h2>URL删除某个参数</h2>
+            <pre>
+                let removeURLParameter = (url, key) => {
+                    let urlparts = url.split('?');
+                    if (urlparts.length >= 2) {
+                        let prefix = encodeURIComponent(key);
+                        let pars = urlparts[1].split('&');
+                        for (let i = pars.length-1; i >= 0; i--) {
+                            if (pars[i].split('=')[0] == prefix) {
+                                pars.splice(i, 1);
+                            }
+                        }
+                        return urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : '');
+                    }
+                    return url;
+                }
+            </pre>
+        </section>
+        <section>
+            <h2>Object对象过滤</h2>
+            <pre>
+                let objectFilter = obj => {
+                    for (let key in obj) {
+                        if (
+                            (obj[key] == "" && typeof obj[key] == "string") ||
+                            obj[key] == undefined ||
+                            obj[key] == null 
+                        ) {
+                            delete obj[key];
+                        }
+                    }
+                    return obj;
+                }
+            </pre>
+        </section>
+        <section>
+            <h2>复制到剪切板</h2>
+            <pre>
+                let copyToClipboard = str => {
+                    const el = document.createElement('textarea');
+                    el.value = str;
+                    el.setAttribute('readonly', '');
+                    el.style.position = 'absolute';
+                    el.style.left = '-9999px';
+                    document.body.appendChild(el);
+                    const selected =
+                      document.getSelection().rangeCount > 0
+                        ? document.getSelection().getRangeAt(0)
+                        : false;
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    if (selected) {
+                      document.getSelection().removeAllRanges();
+                      document.getSelection().addRange(selected);
+                    }
+                }
+            </pre>
+        </section>
+        <section>
+            <h2>一个简单的uuid</h2>
+            <pre>
+                let getUUid = ()=> {
+                    let s = [];
+                    let hexDigits = "0123456789abcdef";
+                    for (let i = 0; i < 36; i++) {
+                        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+                    }
+                    s[14] = "4";
+                    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
+                    s[8] = s[13] = s[18] = s[23] = "-";
+                    let uuid = s.join("").replace("-", "");
+                    return uuid;
+                }
+            </pre>
+        </section>
+        <section>
+            <h2>刮刮卡效果</h2>
+            <pre>
+                //html部分
+                &lt;canvas id="myCanvas" width="300" height="100"&gt;&lt;/canvas&gt;
+                //css部分
+                body {
+                    padding: 0;
+                    margin: 0;
+                }
+                canvas {
+                    background: url("https://img2.baidu.com/it/u=2385216721,3548664628&fm=253")
+                        center center no-repeat;
+                    background-size: contain;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%,-50%);
+                }
+                //js部分
+                let context = document.getElementById("myCanvas"),
+                    $canvas = context.getContext("2d"),
+                    offset = context.getBoundingClientRect(),
+                    scrolly = window.scrollY;
+                $canvas.globalCompositeOperation = "source-over";
+                $canvas.fillStyle = "#ddd";
+                $canvas.fillRect(0, 0, 300, 100);
+                context.addEventListener("touchstart", function (event) {
+                    event.preventDefault();
+                    $canvas.lineJoin = "round";
+                    $canvas.lineCap = "round";
+                    $canvas.lineWidth = 20;
+                    $canvas.globalCompositeOperation = "destination-out";
+                    $canvas.beginPath();
+                    $canvas.moveTo(
+                        event.changedTouches[0].clientX - offset.left,
+                        event.changedTouches[0].pageY - offset.top - scrolly,
+                    );
+                });
+                context.addEventListener("touchmove", function (event) {
+                    event.preventDefault();
+                    $canvas.lineTo(
+                        event.changedTouches[0].clientX - offset.left,
+                        event.changedTouches[0].pageY - offset.top - scrolly,
+                    );
+                    $canvas.stroke();
+                });
+                context.addEventListener("touchend", function (event) {
+                    event.preventDefault();
+                    $canvas.closePath();
+                    isShow();
+                });
+                function isShow() {
+                    var data = $canvas.getImageData(0, 0, 300, 100).data;
+                    //每个像素点有4个值
+                    for (var i = 0, j = 0; i < data.length; i += 4) {
+                        if (
+                            data[i] == 0 &&
+                            data[i + 1] == 0 &&
+                            data[i + 2] == 0 &&
+                            data[i + 3] == 0
+                        ) {
+                            j++;
+                        }
+                    }
+                    if (j / (300 * 100) > 0.3) {
+                        //可视区域大于30%
+                        $canvas.fillRect(0, 0, 300, 100);
+                    }
+                }
+            </pre>
+        </section>
+        <section>
+            <h2>轮播图</h2>
+            <pre>
+                
+            </pre>
+        </section>
+
+        
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="./src/lib/index.iife.js"></script>
-    <script src="./src/main.js"></script>
 </body>
 </html>
