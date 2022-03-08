@@ -438,6 +438,57 @@
                 rollImages(document.querySelector(".pic-cont"), images);
             </pre>
         </section>
+        <section>
+            <h2>图片滑动</h2>
+            <pre>
+                //css部分
+                .main{
+                    display: flex;
+                    flex-direction: row;
+                    width: 100%;
+                    overflow:scroll;
+                    scroll-snap-type: x mandatory;
+                }
+                img {
+                    width: 90%;
+                    display: block;
+                    transform: scale(0.9);
+                    scroll-snap-stop: always;
+                    scroll-snap-align:center;
+                }
+                .active{
+                    transform: scale(1);
+                    transition: all 0.3s;
+                }
+                ::-webkit-scrollbar {
+                    display: none;
+                }
+                //html部分
+                &lt;div class="main"&gt;
+                    &lt;img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/39bb34167f6c178d6bb768d8872c97f8.jpg"&gt;
+                    &lt;img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/918820682e4a490221cfd92b24c14b86.jpg"&gt;
+                    &lt;img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/222d6c61df75f30e6782ec476d5c8273.jpg"&gt;
+                &lt;/div&gt;
+                //js部分
+                let images = document.querySelectorAll("img");
+                let flagTimeout = "";
+                document.querySelector(".main").addEventListener("scroll",function(event){
+                    if(flagTimeout){clearTimeout(flagTimeout)}
+                    flagTimeout = setTimeout(function(){
+                        images.forEach(function(item,index){
+                            let rect = item.getBoundingClientRect();
+                            let left = rect.left;
+                            let right = rect.right;
+                            if( left > 0 && right < window.innerWidth ){
+                                document.querySelector(".active")?.classList.remove("active");
+                                item.classList.add("active");
+                            }
+                        })
+                    },50);
+                })
+                document.querySelector("img").classList.add("active");
+            </pre>
+        </section>
 
         
     </div>
