@@ -489,6 +489,107 @@
                 document.querySelector("img").classList.add("active");
             </pre>
         </section>
+        <section>
+            <h2>loading效果1</h2>
+            <pre>
+                //css部分
+                .loading{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: fixed;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%,-50%);
+                }
+                .loading::after{
+                    content: "";
+                    display: block;
+                    width: 8px;
+                    height: 8px;
+                    background-color: green;
+                    border-radius: 100%;
+                    margin-left: 8px;
+                    animation: left-cycling 1s linear infinite;
+                }
+                .loading::before{
+                    content: "";
+                    display: block;
+                    width: 8px;
+                    height: 8px;
+                    background-color:blue;
+                    border-radius: 100%;
+                    animation: right-cycling 1s linear infinite;
+                }
+                @keyframes left-cycling{
+                    0%{
+                        transform: translateX(0);
+                    }
+                    25%{
+                        z-index: 2;
+                    }
+                    50%{
+                        transform: translateX(-200%);
+                        z-index: 1;
+                    }
+                    100%{
+                        transform: translateX(0);
+                    }
+                }
+                @keyframes right-cycling{
+                    0%{
+                        transform: translateX(0);
+                        z-index: 1;
+                    }
+                    50%{
+                        transform: translateX(200%);
+                    }
+                    75%{
+                        z-index: 2;
+                    }
+                    100%{
+                        transform: translateX(0);
+                    }
+                }
+                //html部分
+                &lt;div class="loading"&gt;&lt;/div&gt;
+            </pre>
+        </section>
+        <section>
+            <h2>loading效果2</h2>
+            <pre>
+                //css部分
+                .loading {
+                    width: 3px;
+                    height: 3px;
+                    border-radius: 100%;
+                    box-shadow: 0 -10px 0 1px #333, /* 上, 1px 扩展 */ 10px 0px #333,
+                        /* 右 */ 0 10px #333, /* 下 */ -10px 0 #333,
+                        /* 左 */ -7px -7px 0 0.5px #333,
+                        /* 左上, 0.5px扩展 */ 7px -7px 0 1.5px #333,
+                        /* 右上, 1.5px扩展 */ 7px 7px #333, /* 右下 */ -7px 7px #333; /* 左下 */
+                }
+                .rotate {
+                    animation: rotate 1s steps(8) infinite;
+                }
+                .center {
+                    position: fixed;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                }
+                @keyframes rotate {
+                    from {
+                        transform: rotate(0deg);
+                    }
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+                //html部分
+                &lt;div class="loading rotate center"&gt;&lt;/div&gt;
+            </pre>
+        </section>
 
         
     </div>
