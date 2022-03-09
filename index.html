@@ -590,6 +590,42 @@
                 &lt;div class="loading rotate center"&gt;&lt;/div&gt;
             </pre>
         </section>
+        <section>
+            <h2>图片上传</h2>
+            <pre>
+                //html部分
+                &lt;input type="file" name="file" accept="image/*" onchange="uploadFile()"/&gt;
+                //js部分
+                function uploadFile() {
+                    let file = document.querySelector("input[type=file]").files[0];
+                    if ( ["jpeg", "png", "jpg", "gif"].indexOf(file.type.split("/")[1]) == -1 ) {
+                        alert("格式错误!");
+                        return false;
+                    }
+                    if (file.size > 1024 * 1024 * 10) {
+                        alert("超过10MB错误");
+                        return false;
+                    }
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onloadend = () => {
+                        const base64Data = reader.result;
+                        document.querySelector("img").src = base64Data;
+                        fetch("/upload", {
+                            method: "POST",
+                            cache: "no-cache",
+                            credentials: "same-origin",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ image: base64Data }),
+                        }).then((res) => {
+                            console.log(res);
+                        });
+                    };
+                }
+            </pre>
+        </section>
 
         
     </div>
