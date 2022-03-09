@@ -10,21 +10,68 @@
     <meta http-equiv="expires" CONTENT="0">
     <title>code snippets</title>
     <style>
-        .main {
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        header{
             max-width: 1024px;
             margin: 0 auto;
-            border: 1px solid #ddd;
+            padding:6px 12px;
+            background-color: #b3c0d1;
+            color: #333;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content:space-between;
+            box-sizing: border-box;
+        }
+        .logo{
+            font-size: 18px;
+        }
+        input{
+            height: 40px;
+            line-height: 40px;
+            width: 260px;
+            padding:0 10px;
+            font-size: 14px;
+            border: 1px solid #DCDFE6;
+            outline: 0px solid #409EFF;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: #606266;
+            transition: all 0.5s;
+        }
+        input:focus{
+            outline: 1px solid #409EFF;
+        }
+        .main {
+            max-width: 1024px;
+            margin: 6px auto;
+            border: 1px solid #f5f5f5;
+            border-radius: 4px;
+            overflow: hidden;
         }
         h2{
-            background-color: #eee;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #f5f5f5;
         }
         pre{
+            display: block;
+            font-size: 14px;
+            padding: 10px;
+            line-height: 1.5;
+            font-family: monospace;
+            color: #525252;
             word-break: break-all;
             white-space: pre-wrap;
         }
     </style>
 </head>
 <body>
+    <header><h1 class="logo">短代码</h1><input type="text" placeholder="搜索项目"/></header>
     <div class="main">
         <section>
             <h2>URL获取某个参数</h2>
@@ -629,5 +676,18 @@
 
         
     </div>
+    <script>
+        let input = document.querySelector("input");
+        let sections = document.querySelectorAll("section");
+        input.addEventListener("input",function(event){
+            sections.forEach((item)=>{
+                if(item.querySelector("h2").innerText.toLowerCase().indexOf(input.value.toLowerCase()) != -1){
+                    item.style.display = "block";
+                }else{
+                    item.style.display = "none";
+                }
+            })
+        })
+    </script>
 </body>
 </html>
