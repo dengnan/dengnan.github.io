@@ -62,7 +62,7 @@
             display: block;
             font-size: 14px;
             padding: 10px;
-            line-height: 1.5;
+            line-height: 1.6;
             font-family: monospace;
             color: #525252;
             word-break: break-all;
@@ -71,7 +71,7 @@
     </style>
 </head>
 <body>
-    <header><h1 class="logo">短代码</h1><input type="text" placeholder="搜索项目"/></header>
+    <header><h1 class="logo">代码片段</h1><input type="text" placeholder="搜索项目"/></header>
     <div class="main">
         <section>
             <h2>URL获取某个参数</h2>
@@ -176,7 +176,7 @@
             </pre>
         </section>
         <section>
-            <h2>一个简单的uuid</h2>
+            <h2>UUid</h2>
             <pre>
                 let getUUid = ()=> {
                     let s = [];
@@ -673,8 +673,42 @@
                 }
             </pre>
         </section>
+        <section>
+            <h2>canvas压缩图片</h2>
+            <pre>
+                //html部分
+                &lt;input type="file" name="file" accept="image/*" onchange="uploadFile()"/&gt;
+                &lt;img src=""/&gt;
+                //js部分
+                function compressImgToBase64(file,ratio = 0.95) {
+                    return new Promise(function(resolve,reject){
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = () => {
+                            const base64 = reader.result;
+                            let image = new Image();
+                            image.src = base64;
+                            image.onload = function(){
+                                let canvas = document.createElement('canvas');
+                                let context = canvas.getContext('2d');
+                                canvas.width = image.width;
+                                canvas.height = image.height;
+                                context.drawImage(image,0,0,canvas.width,canvas.height);
+                                let newImageData = canvas.toDataURL(file.type,ratio);
+                                resolve({base64:newImageData});
+                            }
+                        }
+                    })
+                }
+                function uploadFile() {
+                    let file = document.querySelector("input[type=file]").files[0];
+                    compressImgToBase64(file,0.1).then((res)=>{
+                        document.querySelector("img").src = res.base64;
+                    })
+                }
+            </pre>
+        </section>
 
-        
     </div>
     <script>
         let input = document.querySelector("input");
