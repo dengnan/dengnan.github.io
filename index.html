@@ -708,6 +708,38 @@
                 }
             </pre>
         </section>
+        <section>
+            <h2>base64Data计算大小</h2>
+            <pre>
+                //html部分
+                &lt;input type="file" /&gt;
+                //js部分
+                let input = document.querySelector("input");
+                input.addEventListener("change",function(){
+                    let file = input.files[0];
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onloadend = function(){
+                        let result = reader.result;
+                        console.log(base64Size(result)+"kb");
+                    }
+                })
+                function base64Size(base64Data){
+                    base64Data = base64Data.substring(base64Data.indexOf("base64,"));
+                    let eqTagIndex = base64Data.indexOf("=");
+                    base64Data = eqTagIndex != -1 ? base64Data.substring(0,eqTagIndex) : base64Data;
+                    return Math.round(base64Data.length * 3/(4*1024));
+                }
+            </pre>
+        </section>
+
+
+
+
+
+
+
+
     </div>
     <a class="top" href="javascript:window.scrollTo(0,0);">回顶部</a>
     <style>
