@@ -760,6 +760,38 @@
                 let data = await swr('cache-key',fetch,9000);
             </pre>
         </section>
+        <section>
+            <h2>添加水印效果</h2>
+            <pre>
+                function setWatermark(str) {
+                    let id = "watermark";
+                    document.getElementById(id)?.remove();
+                    let can = document.createElement("canvas");
+                    can.width = 250;
+                    can.height = 150;
+                    let cans = can.getContext("2d");
+                    cans.rotate((-20 * Math.PI) / 180);
+                    cans.font = "14px Arial";
+                    cans.fillStyle = "rgba(200, 200, 200, 0.30)";
+                    cans.fillText(str, 0, 65);
+                    let div = document.createElement("div");
+                    div.id = id;
+                    div.style.pointerEvents = "none";
+                    div.style.top = "0px";
+                    div.style.left = "0px";
+                    div.style.position = "fixed";
+                    div.style.zIndex = "99999";
+                    div.style.width = document.documentElement.clientWidth + "px";
+                    div.style.height = document.documentElement.clientHeight + "px";
+                    div.style.background =
+                        "url(" + can.toDataURL("image/png") + ") 0 0 repeat";
+                    document.body.appendChild(div);
+                }
+                window.addEventListener("load", function () {
+                    setWatermark("0000");
+                });
+            </pre>
+        </section>
 
 
 
