@@ -793,6 +793,41 @@
             </pre>
         </section>
 
+        <section>
+            <h2>元素在窗口内是否可见</h2>
+            <pre>
+                //元素在窗口内
+                function isInWindows(
+                    element,
+                    offsetMarginTop = 0,
+                    offsetMarginBottom = 0,
+                ) {
+                    let offsetTop = element.offsetTop; //到文档顶部距离
+                    let clientHeight = element.clientHeight; //元素高度
+                    let scrollTop = document.documentElement.scrollTop; //滚动距离
+                    let windowHeight = window.screen.height; //浏览器窗口高度
+                    let elementBottomTop = offsetTop + clientHeight; //元素底部到文档顶部距离
+                    if (
+                    offsetTop + offsetMarginTop < windowHeight + scrollTop &&
+                    elementBottomTop + offsetMarginBottom > scrollTop
+                    ) {
+                    return true;
+                    } else {
+                    return false;
+                    }
+                }
+                document.addEventListener("scroll", function () {
+                    document.querySelectorAll(".blank").forEach((element) => {
+                    if (isInWindows(element, 30, -30)) {
+                        element.style.backgroundColor = "#ddd";
+                    } else {
+                        element.style.backgroundColor = "#fff";
+                    }
+                    });
+                });
+            </pre>
+        </section>
+
 
 
 
